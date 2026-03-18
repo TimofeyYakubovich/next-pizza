@@ -1,0 +1,177 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("POSTGRES_URL") // uses connection pooling
+    // directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+}
+
+model User {
+    id Int @id @default(autoincrement())
+
+    fullName String
+    email    String    @unique
+    password String
+    role     UserRole  @default(USER)
+    verified DateTime?
+
+    // для регистрации через социальную сеть
+    provider   String?
+    providerId String?
+
+    cart             Cart?
+    orders           Order[]
+    verificationCode VerificationCode?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Category {
+    id       Int       @id @default(autoincrement())
+    name     String    @unique
+    products Product[] // свзяь One to Many у одной категории есть множество продуктов
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Product {
+    id Int @id @default(autoincrement())
+
+    name     String
+    imageUrl String
+
+    ingredients Ingredient[] // свзяь Many to Many дай все ингридиенты которые есть в этом продукте
+    items       ProductItem[] // у продукта может быть множество вариаций
+
+    category   Category @relation(fields: [categoryId], references: [id]) // создаем связь Product с Category One to Many но этого поля не будет в бд оно надо только для js
+    categoryId Int // какой id у ножной категории например у этого продукта категория затраки и у затраков id 4 и это id тут хранится
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// у продукта могут быть вариации маленькая средняя большая тесто тонкое толстое
+// но может быть и только 1 вариация
+model ProductItem {
+    id Int @id @default(autoincrement())
+
+    price     Int
+    size      Int? // ? значит может не быть размера
+    pizzaType Int? // может не иметь разновидности теста
+
+    cartItems CartItem[]
+
+    product   Product @relation(fields: [productId], references: [id])
+    productId Int
+}
+
+model Ingredient {
+    id Int @id @default(autoincrement())
+
+    name     String
+    price    Int
+    imageUrl String
+
+    products  Product[] // свзяь Many to Many дай все продукты у которых есть ингридиент помидор
+    cartItems CartItem[] // на самом деле нигридиентам бесмыслено знать в какие товары в корзине они добавлены но в призме подругому нельзя
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Cart {
+    id Int @id @default(autoincrement())
+
+    user   User? @relation(fields: [userId], references: [id]) // ? потому что пользователя может и не быть 
+    userId Int?  @unique
+
+    items CartItem[]
+
+    // на некаторых сайтах можно дабавлять в корзину товары без авторизации в додопицце так нельзя 
+    // мы сделаем что бы без авторизации можно было добавлять товары в корзину
+    // ситуация если пользователь не авторизован и добавляет товары в корзину, корзина будет в бд но не будет конкретного пользователя
+    // что бы привязать корзину к неавторизованному пользователю будем использовать token
+    token String
+
+    totalAmount Int @default(0) // общая стоимость
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// продукты которые будут хронится в корзине
+model CartItem {
+    id Int @id @default(autoincrement())
+
+    cart   Cart @relation(fields: [cartId], references: [id])
+    cartId Int
+
+    productItem   ProductItem @relation(fields: [productItemId], references: [id])
+    productItemId Int
+
+    quantity Int @default(1) // количество продукта пицц кофе и тд
+
+    // у вариации productItem есть свои ингидиенты базовые но у товара который лежит в корзине могут быть не все которые есть у вариации или дополнительные ингидиенты
+    ingredients Ingredient[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+model Order {
+    id Int @id @default(autoincrement())
+
+    // какому пользователь пренадлежит заказ но пользователя может и не быть
+    user   User? @relation(fields: [userId], references: [id])
+    userId Int?
+
+    // будем хронить токен в заказе на случай если пользователь не авторизован
+    token String
+
+    totalAmount Int // стоимость заказа
+    status      OrderStatus
+    // поле что бы понимать какое id заказа на уровне сервиса оплаты на случай возврата средств и тд 
+    // эквайринг - прием платижей мы будем использовать конкретно Yookassa
+    paymentId   String? 
+
+    //список товаров в самой корзине в фомате Json
+    items Json
+
+    fullName String
+    email    String
+    phone    String
+    address  String
+    comment  String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// код подтверждения при регистрации 
+model VerificationCode {
+    id Int @id @default(autoincrement())
+
+    user   User @relation(fields: [userId], references: [id])
+    userId Int  @unique
+
+    code String
+    // когда код перестанет быть актуальным
+    createdAt DateTime @default(now())
+
+    @@unique([userId, code])
+}
+
+enum OrderStatus {
+    PENDING
+    SUCCEEDED
+    CANCELLED
+}
+
+enum UserRole {
+    USER
+    ADMIN
+}
