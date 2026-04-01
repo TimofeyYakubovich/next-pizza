@@ -24,7 +24,7 @@ export const ProductsGroupList: React.FC<Props> = ({ title, items, categoryId, c
     threshold: 0.4
   });
 
-  console.log('ProductWithRelations', items)
+  // console.log('ProductWithRelations', items)
 
   React.useEffect(() => { // useEffect будет отлавливать изминения и в зависимости от этого оповещать глобальный стейт
     if (intersection?.isIntersecting) { // если болок в зоне видимости экрана то активируем конкретную категорию
