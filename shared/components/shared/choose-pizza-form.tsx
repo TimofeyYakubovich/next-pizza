@@ -19,8 +19,8 @@ interface Props {
   ingredients: Ingredient[];
   items: ProductItem[];
   loading?: boolean;
-//   onSubmit: (itemId: number, ingredients: number[]) => void;
-  onClickAddCart?: VoidFunction;
+  onSubmit: (itemId: number, ingredients: number[]) => void;
+  // onClickAddCart?: VoidFunction;
   className?: string;
 }
 
@@ -30,8 +30,8 @@ export const ChoosePizzaForm: React.FC<Props> = ({
   imageUrl,
   ingredients,
   loading,
-  onClickAddCart,
-//   onSubmit,
+  // onClickAddCart,
+  onSubmit,
   className,
 }) => {
 
@@ -43,7 +43,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
       selectedIngredients, 
       addIngredient, 
       availableSizes, 
-      // currentItemId
+      currentItemId
     } = usePizzaOptions(items)
 
     const { totalPrice, textDetaills } = getPizzaDetails(
@@ -77,12 +77,15 @@ export const ChoosePizzaForm: React.FC<Props> = ({
     // const textDetaills = `${size} см, ${mapPizzaType[type]} пицца`
 
     const handleClickAdd = () => {
-      onClickAddCart?.()
-      console.log({
-        size,
-        type,
-        ingredients: selectedIngredients,
-      })
+      // onClickAddCart?.()
+      if(currentItemId) {
+        onSubmit(currentItemId, Array.from(selectedIngredients))
+      }
+      // console.log({
+      //   size,
+      //   type,
+      //   ingredients: selectedIngredients,
+      // })
     }
 
     // если допустим выбираем тонкое тесто то будут дизейблиться те размеры у которых нет тонкого теста и тоже самое с традиционным
@@ -153,7 +156,7 @@ export const ChoosePizzaForm: React.FC<Props> = ({
                 
 
                 <Button
-                    // loading={loading}
+                    loading={loading}
                     onClick={handleClickAdd}
                     className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
                     Добавить в корзину за {totalPrice} ₽

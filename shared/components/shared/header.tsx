@@ -9,10 +9,12 @@ import { SearchInput } from './search-input';
 import { CartButton } from './cart-button';
 
 interface Props {
+    hasSearch?: boolean;
+    hasCart?: boolean;
     className?: string
 };
 
-export const Header:React.FC<Props> = ({className}) => {
+export const Header:React.FC<Props> = ({hasSearch = true, hasCart = true, className}) => {
     
     return (
         // cn функция склеивает базовые классы
@@ -27,9 +29,15 @@ export const Header:React.FC<Props> = ({className}) => {
                         </div>
                     </div>
                 </Link>
-                <div className="mx-10 flex-1">
-                    <SearchInput />
-                </div>
+
+                {
+                    hasSearch && (
+                        <div className="mx-10 flex-1">
+                            <SearchInput />
+                        </div>
+                    )
+                }
+                
                 <div className="flex items-center gap-3">
                     <Button variant="outline" className="flex items-center gap-1">
                         <User size={15}/>
@@ -47,7 +55,7 @@ export const Header:React.FC<Props> = ({className}) => {
                             <ArrowRight className="w-5 absolute right-5 transition duration-300 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0" />
                         </Button>
                     </div> */}
-                    <CartButton/>
+                    {hasCart && <CartButton />}
                 </div>
             </Container>
         </header>

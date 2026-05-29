@@ -13,6 +13,6 @@ export interface CartDTO extends Cart {
 }
 
 export interface CreateCartItemValues {
-  productItemId: number;
+  productItemId: number; // id товара вариации
   ingredients?: number[];
 }

@@ -9,7 +9,7 @@ export default async function ProductModalPage({ params: { id } }: { params: { i
         where: {
             id: Number(id),
         },
-            include: {
+        include: {
             ingredients: true,
             items: true,
         },

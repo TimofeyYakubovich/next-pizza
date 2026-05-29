@@ -55,7 +55,7 @@ export const Filters:React.FC<Props> = ({className}) => {
 
     const filters = useFilters();
 
-    useQueryFilters(filters);
+    useQueryFilters(filters); // при закртытии модпльно окна поидее next делает перерисовку и хук useFilters возвращает каждый раз новый объект filters
 
     const items = ingredients.map((item) => ({text: String(item.name), value: String(item.id)}))
 

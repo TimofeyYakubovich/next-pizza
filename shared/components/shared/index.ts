@@ -10,12 +10,13 @@ export { CheckboxFiltersGroup } from './checkbox-filters-group'
 export { SearchInput } from './search-input';
 export { PizzaImage } from './pizza-image';
 export { ChooseProductForm } from './choose-produsct-form';
+export { ChoosePizzaForm } from './choose-pizza-form';
 export { IngredientItem } from './ingredient-item';
 export { CartButton } from './cart-button';
 export { CartDrawer } from './cart-drawer';
-// export { ProductForm } from './product-form';
-// export { WhiteBlock } from './white-block';
-// export { CheckoutItemDetails } from './checkout-item-details';
+export { ProductForm } from './product-form';
+export { WhiteBlock } from './white-block';
+export { CheckoutItemDetails } from './checkout-item-details';
 // export { CheckoutItem } from './checkout-item';
 // export { CheckoutItemSkeleton } from './checkout-item-skeleton';
 // export { CheckoutSidebar } from './checkout-sidebar';

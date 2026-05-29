@@ -2,6 +2,11 @@
 
 // import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
+
+import toast, { Toaster } from 'react-hot-toast'; 
+// библиотека тоестер для уведомлений компанент <Toaster /> нужно сделать глобальным на все приложение удобней тут в главном лояуте но он рендерится на сервере
+// а библиотека на клиенте Toaster это как провайдер в редакстулкит добавляем его в body и оно применяется ко всему приложению
+
 import './globals.css';
 // import { Header } from '@/components/shared/header';
 
@@ -30,6 +35,7 @@ export default function RootLayout({
         </head>
       <body className={nunito.variable}>
           {children}
+          <Toaster />
       </body>
     </html>
   );
