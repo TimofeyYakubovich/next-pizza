@@ -18,7 +18,7 @@ export const Header:React.FC<Props> = ({hasSearch = true, hasCart = true, classN
     
     return (
         // cn функция склеивает базовые классы
-        <header className={cn('border, border-b', className)}>
+        <header className={cn('border-b', className)}>
             <Container className='flex items-center justify-between py-8'>
                 <Link href='/'>
                     <div className="flex items-center gap-4">

@@ -4,6 +4,7 @@ import type { Metadata } from 'next';
 // import { Nunito } from 'next/font/google';
 // import '../globals.css';
 import { Header } from '@/shared/components/shared/header';
+import { Suspense } from 'react';
 
 // const nunito = Nunito({
 //   subsets: ['cyrillic'],
@@ -25,7 +26,9 @@ export default function HomeLayout({
 }>) {
   return (
     <main className='min-h-screen'>
-      <Header/>
+      <Suspense>
+        <Header/>
+      </Suspense>
       {children}
       {modal}
     </main>

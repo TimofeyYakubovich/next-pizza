@@ -39,6 +39,8 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
     const updateItemQuantity = useCartStore(state => state.updateItemQuantity)
     const removeCartItem = useCartStore(state => state.removeCartItem)
 
+    const [redirecting, setRedirecting] = React.useState(false);
+
     // const [totalAmount, fetchCartItems, items] = useCartStore((state) => [
     //     state.totalAmount, 
     //     state.fetchCartItems,
@@ -152,11 +154,11 @@ export const CartDrawer: React.FC<React.PropsWithChildren<Props>> = ({ children,
                                         {/* <span className="font-bold text-lg">{550} ₽</span> */}
                                     </div>
 
-                                    {/* <Link href="/checkout"> */}
-                                    <Link href="/cart">
+                                    <Link href="/checkout">
+                                    {/* <Link href="/cart"> */}
                                         <Button
-                                            // onClick={() => setRedirecting(true)}
-                                            // loading={redirecting}
+                                            onClick={() => setRedirecting(true)}
+                                            loading={redirecting}
                                             type="submit"
                                             className="w-full h-12 text-base">
                                             Оформить заказ
