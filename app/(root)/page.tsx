@@ -11,7 +11,8 @@ import { GetSearchParams, findPizzas } from "@/shared/lib/find-pizzas";
 // главная страница
 // next.js пожет получать params из юрл и мы оттула вытаскивали id на странице ProductPage
 // но еще может получать searchParams но в нексте не сделали отдельные типы для этого приходится самому типизировать
-export default async function Home({searchParams}: {searchParams: GetSearchParams}) {
+// export default async function Home({searchParams}: {searchParams: GetSearchParams}) {
+export default async function Home({ searchParams }: { searchParams: Promise<GetSearchParams> }) {
 
   // const categories = await prisma.category.findMany({ // достаем из призмы котегории
   //    include: {                                       // include делает то что можно взять вместе с category и ту связь котороя у нее есть
@@ -24,7 +25,7 @@ export default async function Home({searchParams}: {searchParams: GetSearchParam
   //    }
   // })
 
-  const categories = await findPizzas(searchParams);
+  const categories = await findPizzas(await searchParams);
 
   // console.log(categories)
   // console.log(categories[0].products)
