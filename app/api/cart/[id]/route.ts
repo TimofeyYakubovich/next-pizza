@@ -6,10 +6,13 @@ import { NextRequest, NextResponse } from "next/server";
 // далее находим по id товар в корзине в нем обновляем quantity и еще что то если надо
 // можно сделать и без вложенности app\api\cart\[id] а просто в файле app\api\cart\route.ts и доставать id из req
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
     try {
         
-        const id = Number(params.id)  // их парамсов достаем id api/cart/5
+        //const id = Number(params.id)  // их парамсов достаем id api/cart/5
+        const { id: rawId } = await params;
+        const id = Number(rawId);
+
         // const body = req.json()       // из рекуеста достаем то что надо обновить
         const data = (await req.json()) as { quantity: number };
         const token = req.cookies.get('cartToken')?.value
@@ -55,11 +58,14 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 }
 
 
-export async function DELETE(req: NextResponse, { params }: {params: {id: string}}) {
+export async function DELETE(req: NextResponse, { params }: { params: Promise<{ id: string }> }) {
 
     try {
 
-        const id = Number(params.id)
+        // const id = Number(params.id)
+        const { id: rawId } = await params;
+        const id = Number(rawId);
+
         const token = req.cookies.get('cartToken')?.value
 
         if (!token) {
@@ -78,7 +84,8 @@ export async function DELETE(req: NextResponse, { params }: {params: {id: string
 
         await prisma.cartItem.delete({
             where: {
-                id: Number(params.id),
+                // id: Number(params.id),
+                id: Number(id),
             },
         });
 

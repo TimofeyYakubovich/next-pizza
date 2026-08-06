@@ -14,8 +14,10 @@ import { notFound } from "next/navigation"
 
 // хук useCartStore не умеет работать с асинхронной функцией всем компанентом если сделать 'use client'; не будут работать серверные запросы
 
-export default async function ProductPage({ params: { id } }: { params: { id: string } }) {
+// export default async function ProductPage({ params: { id } }: { params: { id: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {
     // const router = useRouter();
+    const { id } = await params;
     
     const product = await prisma.product.findFirst({
         where: {
