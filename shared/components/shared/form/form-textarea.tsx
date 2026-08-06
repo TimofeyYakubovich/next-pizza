@@ -13,5 +13,9 @@ interface Props extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
 }
 
 export const FormTextarea: React.FC<Props> = ({ className, name, label, required, ...props }) => {
-
+  return (
+    <div>
+      FormTextarea
+    </div>
+  )
 }
